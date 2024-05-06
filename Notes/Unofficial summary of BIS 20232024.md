@@ -61,7 +61,7 @@ There are three essential keywords in IS:
 
   - There are a lot of different techniques for Observations (also KPI/Event logs) are used:
 
-    ![image-20240506102751754](./assets/\image-20240506102751754.png)
+    ![image-20240506102751754](./assets/image-20240506102751754.png)
 
 Any Observation that describe information processing must be consistent with Specification and Goals.
 The possible dependencies and conflicts between Goals must be concisely handled.
@@ -207,3 +207,95 @@ According to **ICMP (Institute of Certified Professional Managers)** there are 5
 Control can be applied simply by transferring habits, values and beliefs to people within the orgs and if control has to be **objective**, KPI or measures are required together with Observations!
 
 ![image-20240506220443339](./assets/image-20240506220443339.png)
+
+> *Apple example:*
+>
+> Apple identified online stores as a key component for creating his ecosystem for smartphones.
+>
+> **Goal** 		-> Convince developers we have customers
+>
+> **Sub goal** 	 -> Get attractive content to have traction on customers
+>
+> ​	*Performance SL* -> Exponential customer growth
+>
+> **Operation	**-> Advertise users about our attractive content
+>
+> ​	*Performance OL* -> Click rate of the store from website and device uiers
+>
+> ​	*Performance TL*  -> Investment in remarketing activities
+
+> *Restaurant example:*
+>
+> Due to Covid restrictions, a restaurant has to reduce the number of customers for its rooms.
+>
+> **Goal	**	 -> Do not reduce the number of delivered services
+>
+> **Sub goal	**  -> Reduce the time of service
+>
+> ​	*Performance SL* -> Number of delivered services compared to the previous years
+>
+> **Operation	**-> Propose a menu with simple dishes
+>
+> ​	*Performance OL* -> Average time to prepare dishes compared to the previous years
+>
+> ​	*Performance TL* -> Dwell time of customers (inviting served customers to leave their place to others)
+
+There are aspects of an organization that cannot be specified. Few orgs, in fact, have the resources required to model all their processes in detail, and even if such resources were available it would not be cost-effective to spend them in this way....
+
+Some process are identified as **key aspects** of an organization and are controlled by **operational and tactical performance measures**. *Business Process Management - BPM and Process Mining - PM* usually address these levels.
+
+Given to the **strategic** goals the aim is to verify the processes (actions) that we are implementing are executable in an efficient way, in less words: *Achieving goals with minimum wasted effort or expense*.
+
+But we have to know that all levels are connected:
+
+- **Strategic control** defines the priorities for **operational and tactical control**
+- **Operational and tactical performance measures** are components of **strategic performance measures** 
+- **Operational and tactical performance measures** provide important insight to revise the **strategic plans** 
+
+A **PM** projects must be aware of the strategic level, the **KUT** is used to verify if the knowledge acquired at the different levels is consistent with the goals at the **strategic level**.
+
+A **performance indicator** implies measuring one or more measurable dimensions, the value of an indicator are often referred as **level** and an indicator may be connected to an **objective** stating the level to be achieved or the improvement of the level we expect.
+
+> **KPI Summary:** [from now on we are talking about different KPIs]
+>
+> KPIs are *central elements of management science* but selecting them is not trivial! There are so many reference models (SCOR/APQC/ITIL/etc.) and they may refers to different levels (Strategic/Operational/Tactical)
+
+A **Business Process Management - BPM** typically addresses the **operational or tactical level**, the goal is executing processes efficiently (achieving goals with the minimum wasted effort/expense). This is also where Process Mining also insists. Traditionally there are three main dimensions to consider:
+
+- **Time**
+  - *Processing time - PT*, time taken by an activity
+  - *Waiting time - WT*, time between activities
+  - *Lead time - LT*, $\sum{PT} + \sum{WT}$, the sum of the time taken by all the activities and all the time between them
+  - *Transition Time - TT*, $\sum{WT}$, the total time to pass between activities in a process instance or case
+  - *Cycle Time - CT*, $LT - TT$, the lead time less transition time, also knows as sum of all PT
+  - *Cycle time efficiency - CTE*, $CT/LT$, the *ratio between value-adding time and non value-adding time*
+  - *Incremental Lead Time - ILT*, LT incremented for each activity, useful to **identify bottlenecks** [?]
+  - *Incremental Cycle Time - ICT*, CT incremented for each activity, useful to **identify bottlenecks** [?]
+- **Cost**
+  - *Key Cost - CT*, cost of **value-adding** activities (costs at processing time on activities requested by the customer)
+  - *Accessory Cost - AC*, cost of **non value-adding** activities (costs at waiting time on activities not requested by the customer)
+  - *Cost*, material costs + Resource costs
+  - *Resource Utilisation - RU*, the time spent per resource / time available per resource.
+    - *Increasing resource utilization can increase the waiting time because resources with no free time available will be producing queues!*
+  - *Revenue - Rv*, revenue of a process instance
+  - *Return - Rt*, Rv - (KC + AC)
+- **Quality**
+  - *Product Quality - PdQ*
+  - *Customer Satisfaction - CS*
+  - *Delivery Quality - DQ*
+  - *Process Quality - PcQ*
+  - *Cost of Quality - CoO*
+  - *Work-in-process - WIP*
+  - etc.
+
+> **Balanced scorecard:**
+>
+> Is a popular methodology to identify the organizational goals, define the KPIs and monitor them!
+
+To measure performance we require a data model able to address all of these dimensions:
+
+![image-20240506224311765](./assets/image-20240506224311765.png)
+
+Especially the time, that is a crucial dimension to assess the performances of an organization and, obviously, to know the sequence of activities to reach a specific goal!
+
+ 

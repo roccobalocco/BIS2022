@@ -298,4 +298,54 @@ To measure performance we require a data model able to address all of these dime
 
 Especially the time, that is a crucial dimension to assess the performances of an organization and, obviously, to know the sequence of activities to reach a specific goal!
 
- 
+<hr>
+
+# Process Mining:
+
+By combining appropriate Data Mining techniques with Event Logs we can get some insight about the executed processes.[Observed vs Expected Process]
+
+> Some keywords:
+>
+> - **Event Log**:
+>   A collection of events recorded by an Information System in which each event refers to an *activity/task* executed at a particular *time* and for a particular ***case***.
+> - **Case**:
+>   A collection of *events* related to the same process execution. Many cases can follow the same trace and they may be described by additional attributes that are relevant for filtering or performing other analysis.
+> - **Variant:**
+>   A Collection of cases following the same *Trace*. In many processes the observed trace variants follow a **Pareto Distribution**:
+>   ![img](./assets/u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.jpeg)
+>   Typically, there are a limited number of *traces* that can be observed frequently, while there are often much more traces that are infrequent.
+>   *Profiling the distribution of variants in the Event Log is the starting point for understanding the process*
+> - **Process Model**:
+>   A collection of logical specifications that prescribe the sequence, the synchronization, the pre and post conditions of activities, steps or procedures to be implemented to reach a goal
+>   We distinguish between **representation** and **behaviour** of a model. A **process model** can be *represented* using a plethora of *modelling languages* (Petri, BPMN, UML, etc) while the *behavior* is often defined as thje set of traces allowed by the model.
+>
+> Note: *Trace distribution is also important, likelihood functions can be exploited to account for it*
+
+Explicitly the Process Mining is accounted for the *discovery and enhancement* of events logs and use what it discovers to modelling/analyzing the "world" (business processes, people, service and so on).
+
+![image-20240507213211230](./assets/image-20240507213211230.png)
+
+There are some **use cases for Process Mining:**
+
+- **Process Optimization**, to have faster and more accurate analysis of processes because the event logs can infer performance metrics and they can be used to *identify bottlenecks/costly step*
+- **Process Discovery for Automation**, automation provides faster and lower cost solutions
+- **Conformance Validation**, check if their actual processes conform to the given specifications (it follow the right trace or smth)
+- **Process Simulation**, make future predictions mining their processes with the data gained from event logs
+
+<img src="./assets/image-20240507213535063.png" alt="image-20240507213535063" style="zoom:50%;" />
+
+There are a lot of tools for Process Mining, I am currently using only PM4PY and PMTK, but in the world there are a lot of possibilities! (BPMN.io, cortado, RuM, etc)
+
+To summarize smth, **Event Logs** can assume a lot of different forms and every system architecture that includes some sort of logging (all of them) has developed its own solution. The 3 format standards are *MXML, XES, CSV*.
+
+**XES** has been proposed by the *IEEE Task Force on Process Mining* and it means eXtensible Event Stream. It is XML based and wants to provide a *generally-acknowledged format* for the interchange of event log data between tools and application domains. It hasn't any sort of predefined attributes, not like MXML :tongue:.
+
+The **mandatory field for Event Logs** are ***Case ID && TimeStamp && Activity name***, the other fields may be of interest for computing KPIs.
+
+If we are interested in the *processing time of activities we require logs with a **Start Timestamp** and a **Completion Timestamp** for each event.
+
+The **Event Log** captures multiple dimensions of organizational workflow, the case, process and resource dimensions (*resource, activity, task, work item, case*).
+
+<hr>
+
+# Variant Analysis:

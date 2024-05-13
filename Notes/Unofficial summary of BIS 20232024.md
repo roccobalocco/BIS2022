@@ -260,6 +260,8 @@ A **performance indicator** implies measuring one or more measurable dimensions,
 >
 > KPIs are *central elements of management science* but selecting them is not trivial! There are so many reference models (SCOR/APQC/ITIL/etc.) and they may refers to different levels (Strategic/Operational/Tactical)
 
+## Performance Indicator List:
+
 A **Business Process Management - BPM** typically addresses the **operational or tactical level**, the goal is executing processes efficiently (achieving goals with the minimum wasted effort/expense). This is also where Process Mining also insists. Traditionally there are three main dimensions to consider:
 
 - **Time**
@@ -349,3 +351,453 @@ The **Event Log** captures multiple dimensions of organizational workflow, the c
 <hr>
 
 # Variant Analysis:
+
+**Performance Measurement** is essential to assess the achievement of goals and performance standards. We have to be aware that *mean values are not relaible and terms of comparison are required*.
+
+**Process variant analysis** is a family of techniques to analyze event logs produced during the execution of a process, in order to explain the differences between the execute cases and understanding the differences between process variants helps to make informed decisions as to how to standardize or improve a business process.
+
+A **Variant** is a collection of cases following the *same trace, the same sequence of activities*. This notion *can be relaxed* considering collections of cases following *a same set of constraints:*
+
+- *Having the same Start and End activity*
+- *Including one specific activity*
+- *Having cycle time higher than 3 hours*
+- *Started by resource of type consultant*
+
+In an *extensive sense*, we can speak about **variant analysis** for any analysis on any segments of the Event Logs.
+
+The frequency distribution of variants typically *follows a power law* where a small fraction accounts for most of the cases, for example more than 80% of all cases can be described by less than 20% of all process variants, this is called **Pareto Principle**.
+
+<img src="./assets/image-20240513102122847.png" alt="image-20240513102122847" style="zoom:67%;" />
+
+## Filtering Noise:
+
+An event logs *may contain **wrong** or **inaccurate information*** so we have to consider filtering the noise to improve our understanding of the process. The errors can occur *during recording of the events/cases*:
+
+- Activities no more relevant
+- Activities with null time duration
+- Wrong timestamps
+
+Errors also are *incomplete recording of events/cases:*
+
+- Incomplete cases/events
+- Missing attributes: timestamp, resource, cost, etc.
+
+We can also filter out the *irrelevant information*, data that we aren't interested into, like a *timeframe*, *cases handled by a department/resources not of interest for us*, *cases characterized by activities or paths not relevant* and so on...\
+
+We can also filter out something when the event logs contain *too much information*, to simplify our view to improve our understanding. We can include only *the most frequent variants, or the most frequent activities, or the most frequent paths and so on.*
+
+There are some typical filters that are included in this table:
+
+| Control-Flow     | Time       | Attributes         |
+| ---------------- | ---------- | ------------------ |
+| Start activities | Timeframe  | String Attributes  |
+| End activities   | Throughput | Numeric Attributes |
+| Directly-Follows |            |                    |
+| Prefixes         |            |                    |
+| Suffixes         |            |                    |
+| Case Size        |            |                    |
+
+We can also *filter by comparison, deciding for a term of comparison*.
+
+To run *performance analysis* on variants or segments we firs need to identify a set of **indicators**, an **indicator** implies to measure one or more measurable dimensions of the outcomes of the organization (i.e.: % of overdue cases). The value of an indicator is referred as **level** and an indicator may be connected to an **objective** stating the level to be achieved or the improvement of the level we expect.
+
+The list of indicators provided above (really really upper than here), can be exploited to filter out something, using one of the item of the list as *term of comparison*!
+
+## Control-Flow analysis:
+
+To run this kind of analysis we first *need to identify a set of **patterns***. The Control-Flow defines a partial order relationship between the activities of a business process model, specifying in which temporal order they will be executed. The typical patterns are:
+
+| SEQUENCE | SYNCHRONISATION | PARALLELISATION | ITERATION | COMBINATION |
+| -------- | --------------- | --------------- | --------- | ----------- |
+
+So the cases can be *filtered* based on the observation of specific patterns and variants can be *described* by the frequency of observation of specific patterns:
+
+- **Rework - Rw**: loops on activities or subsequences
+- **Bottlenecks - Bt**: activities required by many other
+- **Cancellation - Cn**: cases that do not get to the expected result
+- **Deviant Flows - DF**: cases not following the required sequence
+
+### Patterns:
+
+- **Simple patterns** can be identified by REGEX
+- **Complex patterns** imply *pre and post conditions* checked or infinite sequences conforming with the pattern. They can be verified using
+  - Set of *temporal logic constraints*
+  - *Replay* techniques
+  - *Alignment* techniques
+
+> A **variant** is a collection of cases following the same trace, the same sequence of activities.
+>
+> A **relaxed variant** can be defined as collection of cases that conform to a specific pattern:
+>
+> - Performance measure: All cases with CTE below 0.5
+> - Control flow pattern: All cases that include a rework/loop
+
+In the end:
+
+- To assess the **performance level** achieved by a variant or segment we need to compare it with a reference level.
+- To asses the **frequency of verification of a pattern** in a variant or segment we need to compare it with a reference frequency
+- An **objective** defined by the organization where the comparison is boolean \/ the result of a difference (+ or -) to be contained within a tolerance level
+- The **levels/frequencies** achieved by other variants where the comparison implies that we analyse the significance of the observed difference
+
+<hr>
+
+# Comparative Process Mining:
+
+Performance results and conformance checking metrics are *domain-dependent*, the evaluation of a process requires defining a **term of comparison** and we can compare *different processes, variants* of the event logs and different segments (groups of cases) of the event log.
+
+To asses the **performance level** achieved by a variant or segment we need to compare it with a **reference level**.
+
+To assess the **frequency of verification of a pattern** in a variant/segment we need to compare it with a **reference frequency**.
+
+An **objective** defined by the organization can be a boolean, a result of a difference that has to be contained within a tolerance level.
+
+The **levels/frequencies** achieved by other variants implies that we analyze the **significance** of the observed difference.
+
+**The performance level** achieved by a variant is compared to the **objective level decided by the organization** \/ **level achieved by other variants.**
+
+The **frequency of verification of a pattern** achieved by a variant is compared to the **objective frequency decided by the organization** \/ **the frequency achieved by other variants.**
+
+But *how to know if the observed difference is significant or not?*
+
+- We have to ask ourselves if the observed difference allow us to infer new knowledge.
+  - **Epistemic soundness**, the inference method we are applying is correct?
+    - It depends on three main factors:
+      1. The **method adopted is sound**, what I'm measuring can be applied to all instances I am aassessing
+      2. The **data collection process is safe**, it is errors free, I expect limited errors or I can measure the error
+      3. The **sample analyzed is representative of our true operating field**. It is not biased and it is not subject to drifts.
+  - **Statistical significance**, the difference observed may be due to chance?
+    - It depends on three inter-related factors:
+      1. **Sample size**, more larger increase the statistical significance to be seen
+      2. **Variability in the response or characteristics**, either by chance or nonrandom factors. The smaller the variability, the easier it is to demonstrate statistical significance
+      3. **Effect size or the magnitude of the observed effect**, the greater the size of the effect, the easier it is to demonstrate statistical significance
+  - **Business significance**, the difference observed is supporting business goals?
+    - This level implies that we clearly identify our goals, and if they aren't yet clear the collected knowledge may be exploited to set this goals
+
+> **Statistical significance** is complex as many assumptions must be verified when selecting a test so we focues here on simple tests like preliminary checks.
+>
+> With frequency we can use Bayesian tests (**lift metrics with association rules**), *comparing the frequency observed by two joint factors with the frequency we expect if the two factors are indipendent*.
+
+### Chi Square test:
+
+**Chi-Square** tests compares observed and expected values by calculating the expected as the average of the observed categories, dimensioned based on the relative size of the group.
+
+![image-20240513114347926](./assets/image-20240513114347926.png)
+
+**Central tendency** helps us to verify if the difference is greater than the sum of the standard deviations:
+$$
+z=\frac{\bar x - \bar y}{\sigma_x + \sigma_y}\in[0,\infin]
+$$
+With **scalar variables** we can use the **P-value**, the level of marginal significance within a statistical hypothesis test, representing the probability of the occurrence of the observed effect if the null hypothesis is true.
+$$
+z=\frac{x-y}{\sqrt{x+y}}\in[0,\infin] > 1.96
+$$
+$z$ must be greater than $1.96$.
+
+While comparing variants we have to *remove outliers may be a first countermeasure*.
+
+The distance between the **cumulative distribution of two populations** can be measured by Wasserstein's distance, that captures the difference in areas under the measurement unit:
+
+![image-20240513115122509](./assets/image-20240513115122509.png)
+
+### Simpson's paradox:
+
+A phenomenon in probability and statistics in which *a trend appears in several groups of data but disappears or reverses when the groups are combined!*
+
+In fact it states that, when we are taking some groups, the statistics are valuable in a way, but when we combine those groups the statistics aren't the same and aren't valuable anymore.
+
+> I.E. **The University of California admission**
+>
+> If we group the admissions by gender we get that *men are greater*:
+>
+> ![image-20240513115522211](./assets/image-20240513115522211.png)
+>
+> But if we take a look foreach department we observe how the *woman are greater*:
+>
+> ![image-20240513115615999](./assets/image-20240513115615999.png)
+
+<hr>
+
+# Conformance Checking:
+
+
+
+**Conformance Checking** aims at identifying and measuring the severity of the deviations between the actual execution of a business process, as recorded in the event log, and a set of prescriptive specifications!
+
+- **Model-based CC**
+
+  - It implies **Imperative Process Model** where we can verify if the traces in the event log can be executed following the steps allowed by the model.
+    - This action of trying to follow the model using traces is referred as **replay**
+    - The activities that are skipped or added can be registered to account for the observed deviations
+  - The events involved in **iterations and concurrent executions** bring a process model to **generate infinite behavior**
+
+- **Rule-based CC**, identifies constraints the executed behavior has to comply with.
+
+  - **Finite State Automata**, defined by regex
+
+  - **Temporal Logic** to verify pre and post non-local conditions
+
+  - They can have different dimensions to constraint, like time, resource, control-flow, etc.
+
+  - In management science it is common to define Business Rules to costraint the operations that apply to an organization. They are directives on business activities, designed to help for goals, can be alethic or deontic and can be in semi-formal languages such as controlled english
+
+    - | Coordination rules | Qualification/Disqualification rules | Decision rules |
+      | ------------------ | ------------------------------------ | -------------- |
+
+  - In process mining, if the behavior is defined using temporal logic, we refer to **Declarative Process Models**
+
+    - Based on the description of a set of rules that constraint the process behavior.
+    - Are appropriate to describe dynamic environments, where processes are highly flexible and subject to changes.
+
+  - If the behavior isn't defined using temporal logic, we refer to **Imperative Process Models**
+
+    - They represents the whole behavior at once, using BP Models notations (petri nets \/ BPMN). 
+    - They are appropriate to domains where a central control on the model can be enforced.
+
+As said above, *Conformance Checking techniques compare the observed and the expected process behavior*.
+
+A **process behavior** is often defined as the set of traces allowed by the model. It is also important the trace distribution with the *likelihood functions* that can be exploited to account for it.
+
+A model generates traces based on the behavior it encodes and *it may be potentially infinite and it is intended to provide a global view of the process*.
+
+A set of rules constraints the example behavior by filtering traces not conforming to it and *each rule provide a local view of the process.*
+
+An event log contains traces that only provide example behavior and *it is intrinsically finite and may cover partially the process behavior*.
+
+> **Conformance Checking** can be defined as the *assessment of the extend of the intersection of the bahavior of a Model $M$ and an Event Log $L$*
+>
+> $Fitness(M,L)=\frac{M\cap L}{L}$
+>
+> $Precision(M,L)=\frac{M\cap L}{M}$​
+>
+> ***Purpose**: REMOVE THE TRIVIAL ERROR AND LEARN NEW BEHAVIOR TO BE SPECIFICED!*
+
+**To detect deviations in the log behavior we have three families of techniques:**
+
+- **Replay**, each trace is replayed against the process model one event at a time, the errors are used to detect deviations
+  - Deviations are recovered locally and it might not identify the minimum number of errors that explain the deviations
+  - We can compute metrics to quantify the conformance level, like if there is a **good convergence about Fitness/Recall**
+- **Trace Alignment**, does not have this limitation, for each trace in the log they identify the closest trace that can be parsed by the model
+  - Do not explicitly handle concurrent tasks nor cyclic because it cannot be observed at the level of individual traces.
+  - The computational cost of trace alignment is exponential to the length of the traces
+  - Takes in input the cases in the event log and for each activity finds the best match with the model
+  - All cases executing the same sequence of activities result in the same alignment, this is why we call il traces and not cases
+  - The alignment result in a matrix where rows --> traces, while columns --> the same type of activities
+  - The algorithm originated from bioinformatics, where it is used to align protein and gene sequences to identify common structures and mutations.
+    - ![image-20240513124108253](./assets/image-20240513124108253.png)
+    - ![image-20240513124155441](./assets/image-20240513124155441.png)
+  - The traces are then classified in 4 classes:
+    - **Early**, activities executed in the trace before than specified in the model
+    - **Late**, activities executed in the trace later than specified in the model
+    - **Insert**, activities executed in the log but not in the model
+    - **Skip**, activities specified in the model but not executed in the trace
+- **Behavioral Alignment**, a negative event is inserted after a given prefix of a trace if this event is never observed preceded by that prefix, anywhere in the log. If the process model can replay the negative events, it means that there is behavior captured in the process model that is not captured in the log.
+
+**CC serves multiple purposes:**
+
+- **Identify deviating behavior in event log**, *dysfunctional behavior if not allowed by the model*
+- **Identify additional behavior to update Model**, *unspecified behavior if never observed in the event log*
+- Combining them typically remove the trivial error and learn new behavior to be specified
+
+**Process Discovery and Conformance Checking are not *predictive models***, we use these techniques to measure the appropriateness between two artifacts:
+
+- **Event log contains example behavior**, we cannot know if it covers all the behavior the model should represent
+- **Model is a representation**, we cannot know if it represents all the behavior the system made possible
+
+<hr>
+
+# Process Discovery:
+
+**Process Discovery** refers to techniques that manually \/ automatically construct a representation of a business process an organization is performing.
+
+In **Process Mining** it is realized using *inductive \/ selective (evolutionary)* algorithms that take the Event Log in input and provide a Process Model in output, in form of *Directly-Follow Graph, Petri Net or Process Tree.*
+
+A **BPM (Business Process Model)** is a collection of related tasks that produce a specific result, the industry has developed several standards for representing Process Model:
+
+- **UML activity diagram**
+- **Business Process Model Notation - BPMN**
+- **Event-driven Process Chain - EPC**
+
+This three don't have execution semantics, they only provide *notations* and it is often assumed they require non-local semantics, finite state machines aren't enough to represent their behavior.
+
+The *diachronic dimension of BP* is evident, but a BP is more than a sequence of events:
+
+| Synchronisation | Parallelisation | Iterations | Pre/Post conditions | Resource Consumption |
+| --------------- | --------------- | ---------- | ------------------- | -------------------- |
+
+The **BPMN** is an OMG Standard and the BPMN 2.0 official specification document contains the specification documents, the XSD Schemas, etc... The elements of a BPMN are:
+
+- Swimlanes
+- Intermediate Events
+- Data Objects
+- Business Rules
+- Flow
+- Gateway 
+- Activity
+
+To provide a *formal semantics* to PM we need a Turing Complete models such as Petri Nets or Temporal Logic. **Petri Net** are one of the major mathematical modelling languages for the description of distributed systems in the class of discrete event dynamic system. It is often claimed its main goal is the description and analysis of concurrent processes but the range of this theory is much wider, it can also be used to assess epistemological justifications.
+
+# Petri Net:
+
+A **Petri Net** is a *directed bipartite graph*, in which *the nodes represent transitions* (**events that may occur, represented by bars |**) and *places* (**conditions, represented by circles :white_circle:**).
+
+The graph specifies, *for each event*:
+
+- Which conditions cause it - *pre-conditions*
+  - Must be true to observe the event
+  - May become false when the event has occurred
+- Which conditions are the effect of this event - *post-conditions*
+  - Become true whenever the event occurs
+  - May be false before the events has occurred
+
+The Petri Nets are often described by a graphical notation, that is connected with an execution semantics!
+
+**![image-20240513144841368](./assets/image-20240513144841368.png)**
+
+Here we can observe a token :black_circle: in a conditions :white_circle:, to pass to the next place (the green one) it has to satisfy the condition (T1) that is usually represented by a bar | or, in this case, by a rectangle.
+
+Each **transition** $T$ is a tuple $\langle W(p,t), W(t,p)\rangle$ where:
+
+- $W(p,t)$ is a function | $t$ **consumes** $W(p,t)$ tokens in each place $p$
+- $W(t,p)$ is a function | $t$ **produces** $W(t,p)$ tokens in each place $p$
+
+The distribution of the tokens in the places is formalized by the notion of **marking**, which can be seen:
+
+- as a function $m$ | $m(p)$ is the number of tokens in place $p$
+- as a vector $M=\langle m_1, m_2, ..., m_n\rangle$ where $m_i$ is the number of tokens in place $p_i$
+- as a set of places having the number of tokens equal to $x:m=[x_{p_1},...,x_{p_n}]$
+
+Firing a *transition* $t$ in a *marking* $M$ consumes $W(p,t)$ *tokens* from each of its input *places* $p$ and produces $W(t,p)$ *tokens* in each of its output places $p$
+
+A *transition* is enabled (it may fire) in $M$ if there are enough tokens in its input places for the consumptions to be possible.
+
+A **reachability graph** \/ **marking graph** of a Petri Net is a graph in which:
+
+- *nodes* corresponds to *reachable markings*
+- *arcs* correspond to *feasible transition*
+
+![image-20240513145740027](./assets/image-20240513145740027.png)
+
+There are some situations called *conflict situations*, when it is not possible to determine the event that caused and execution, like those:
+
+**![image-20240513145824792](./assets/image-20240513145824792.png)**
+
+A *concurrent \/ parallel execution* models situations like this:
+
+![image-20240513145853540](./assets/image-20240513145853540.png)
+
+## Directly-Follow Graph:
+
+The **DFG** is a *simple formalism* widely used in PM. A *directed graph* where vertexes $V$ denote the activities of a process, while the edges $E$ model that the target activity can be executed immediately after the source activity in a process instance.
+
+A *plain DFG may be extended* by marking some vertexes as *start and completion vertexes*.
+
+A *path in DFG* from *start* to a *completion* vertex represents a possible execution sequence of the process.
+
+![image-20240513150230057](./assets/image-20240513150230057.png)
+
+A DFG permits to show:
+
+- Frequencies of directly-follow relations but may be misleading about the previous steps
+- Parallel activities represented as loops
+- The average time between two activities is conditional (only where they directly follow each other)
+
+## Process Tree:
+
+A **Process Tree** permits to represent the hierarchical structure inherent to the representation of activities:
+
+- *Leaf Nodes* denote activities or a specific silent activity $t$
+- *Non-Leaf Nodes* are control-flow operator, such as sequence, exclusive choice, concurrency, interleaving and structured loops
+
+Given a process tree, a set of execution sequences of activities is constructed recursively like this:
+
+- For a leaf node, this et contains a single execution sequence, consisting of the repective activity
+- For non-leaf nodes, semantics is induced by a function that joins the execution sequences of the subtrees of the node
+
+![image-20240513150610976](./assets/image-20240513150610976.png)
+
+## WorkFlow Net - WF-net:
+
+A **WF-net** is a Petri Net that models a business process definition and it has one *input place* and one *output place*.
+
+In addition it has to satisfies three requirements:
+
+- Option to complete - **it is always possible to reach a transition that marks the end place**
+- Proper completion - **if place end is marked, all other places are empty**
+- No dead transition - **it should be possible to execute an arbitrary transition by following the appropriate rout through the WF-net**
+
+<img src="./assets/image-20240513150826117.png" alt="image-20240513150826117" style="zoom:67%;" />
+
+## Process Discovery Techniques:
+
+### $\alpha$-Algorithm - AM:
+
+Given a trace you infer dependency relations based on the directly-follows relations observed between two succeeding activities:
+![image-20240513150952942](./assets/image-20240513150952942.png)
+
+![image-20240513151005402](./assets/image-20240513151005402.png)
+
+To be putted in a **footprint matrix**:
+
+![image-20240513151117974](./assets/image-20240513151117974.png)
+
+### Inductive Miner:
+
+It Uses a *divide-et-impera* persepctive, recursively splitting the event log into sub-logs:
+
+1. **IM** builds a DFG
+2. When all the edges follow the same directions, based on process tree operators, the log is split into sub-logs
+3. The cutting procedure is repeated until a sub-log with only one activity is reached
+4. The sequence of operators and activities can then be represented as a process tree, easily converted to other process modelling notations
+
+![image-20240513151500463](./assets/image-20240513151500463.png)
+
+![image-20240513151515381](./assets/image-20240513151515381.png)
+
+### Genetic Miner:
+
+It applies the basic principles of the evolutionary algorithm, given an initial solution (**model**) and a goal, the alg evolves this solution for optimizing the goal:
+
+- **Genotype**, causal matrices containing the input and output activities of each transition
+- **Goal**, the fitness function
+- **Evolution**, mutation and crossover
+
+## Validating Predictive models:
+
+![image-20240513151706560](./assets/image-20240513151706560.png)
+
+*Precision and Recall* offer a static measure of the quality of the learning process but this is largely insufficient. Rare are the contexts in which a trained algorithm finds itself working with the same data over and over again...
+
+A first countermeasure is to evaluate the model learned by the algorithm through different test data, making possible to estimate the degree of generality of the learned model.
+
+A model is said to be **under-specified \/ underfitting** if Precision and/or Recall are low.
+
+A model is said to be **over-specified \/ overfitting** if it is too much tied to the examples.
+
+Two are the main factors that influence over/under fitting: **Data distortion \/ bias** (we used under representative data) and **Variability of the domain \/ variance** (the model cannot capture the data variability).
+
+> **Recall \/ Fitness:**
+>
+> The discovered model should allow for the behavior seen in the event log, typical use case *Auditing*. AVOID NONFITTING
+>
+> **Precision:**
+>
+> The discovered model should not allow for behavior completely unrelated to what was seen in the event log, typical use case *Optimization*. AVOID UNDERFITTING
+>
+> **Generalization:**
+>
+> The discovered model should generalize the example behavior seen in the event log. Typical use case *Implementation*. AVOID OVERFITTING
+>
+> **Simplicity:**
+>
+> The discovered model should not be unnecessarily complex. Typical use cases *Human Readability*
+
+Those metrics are important for their specifical use cases and each one represent different graphs...
+
+## Improving Model Quality:
+
+Model quality can be improved by **reducing the variability** in the event log by:
+
+- *Filtering out noise, irrelevant or infrequent behavior*
+- *Using variant analysis to segment the event log*
+- *Using rules to segment the event log*
+- *Clustering the event log into groups of similar traces*
